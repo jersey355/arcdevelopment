@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import { makeStyles } from '@material-ui/styles';
+import {
+    AppBar,
+    Toolbar,
+    Tabs,
+    Tab,
+    Button,
+    Menu,
+    MenuItem,
+    SwipeableDrawer
+} from '@material-ui/core';
+import { useScrollTrigger, useMediaQuery } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/styles';
 
 import logo from '../../assets/logo.svg';
 
@@ -30,10 +33,22 @@ const ElevationScroll = (props) => {
 const useStyles = makeStyles(theme => ({
     toolbarMargin: {
         ...theme.mixins.toolbar,
-        marginBottom: '3em'
+        marginBottom: '3em',
+        [theme.breakpoints.down('md')]: {
+            marginBottom: '2em'
+        },
+        [theme.breakpoints.down('xs')]: {
+            marginBottom: '1.25em'
+        }
     },
     logo: {
-        height: '8em'
+        height: '8em',
+        [theme.breakpoints.down('md')]: {
+            height: '7em'
+        },
+        [theme.breakpoints.down('xs')]: {
+            height: '5.5em'
+        }
     },
     logoContainer: {
         padding: 0,
@@ -73,6 +88,8 @@ const useStyles = makeStyles(theme => ({
 const Header = (props) => {
 
     const classes = useStyles();
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('md'));
     const [selectedTab, setSelectedTab] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -145,6 +162,60 @@ const Header = (props) => {
         setSelectedMenuItem(i);
     }
 
+    const tabs = (
+        <React.Fragment>
+            <Tabs
+                value={selectedTab}
+                onChange={handleTabChange}
+                className={classes.tabContainer}
+                indicatorColor="primary"
+            >
+                <Tab label="Home" component={Link} to="/" className={classes.tab} />
+                <Tab
+                    label="Services"
+                    aria-owns={anchorEl ? "simple-menu" : undefined}
+                    aria-haspopup={anchorEl ? "true" : undefined}
+                    component={Link}
+                    to="/services"
+                    onMouseOver={e => handleClick(e)}
+                    className={classes.tab}
+                />
+                <Tab label="The Revolution" component={Link} to="/revolution" className={classes.tab} />
+                <Tab label="About Us" component={Link} to="/about" className={classes.tab} />
+                <Tab label="Contact Us" component={Link} to="/contact" className={classes.tab} />
+            </Tabs>
+            <Button variant="contained" component={Link} to="/estimate" color="secondary" className={classes.button}>
+                Free Estimate
+                        </Button>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={isOpen}
+                onClose={handleClose}
+                classes={{ paper: classes.menu }}
+                MenuListProps={{ onMouseLeave: handleClose }}
+                elevation={0}
+            >
+                {menuOptions.map((option, i) => (
+                    <MenuItem
+                        key={i}
+                        component={Link}
+                        to={option.link}
+                        classes={{ root: classes.menuItem }}
+                        onClick={(e) => {
+                            handleMenuItemClick(e, i);
+                            setSelectedTab(1);
+                            handleClose();
+                        }}
+                        selected={i === selectedMenuItem && selectedTab === 1}
+                    >
+                        {option.name}
+                    </MenuItem>
+                ))}
+            </Menu>
+        </React.Fragment>
+    );
+
     return (
         <>
             <ElevationScroll>
@@ -159,55 +230,7 @@ const Header = (props) => {
                         >
                             <img src={logo} className={classes.logo} alt="Company Logo" />
                         </Button>
-                        <Tabs
-                            value={selectedTab}
-                            onChange={handleTabChange}
-                            className={classes.tabContainer}
-                            indicatorColor="primary"
-                        >
-                            <Tab label="Home" component={Link} to="/" className={classes.tab} />
-                            <Tab
-                                label="Services"
-                                aria-owns={anchorEl ? "simple-menu" : undefined}
-                                aria-haspopup={anchorEl ? "true" : undefined}
-                                component={Link}
-                                to="/services"
-                                onMouseOver={e => handleClick(e)}
-                                className={classes.tab}
-                            />
-                            <Tab label="The Revolution" component={Link} to="/revolution" className={classes.tab} />
-                            <Tab label="About Us" component={Link} to="/about" className={classes.tab} />
-                            <Tab label="Contact Us" component={Link} to="/contact" className={classes.tab} />
-                            <Button variant="contained" component={Link} to="/estimate" color="secondary" className={classes.button}>
-                                Free Estimate
-                            </Button>
-                            <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                open={isOpen}
-                                onClose={handleClose}
-                                classes={{ paper: classes.menu }}
-                                MenuListProps={{ onMouseLeave: handleClose }}
-                                elevation={0}
-                            >
-                                {menuOptions.map((option, i) => (
-                                    <MenuItem
-                                        key={option}
-                                        component={Link}
-                                        to={option.link}
-                                        classes={{ root: classes.menuItem }}
-                                        onClick={(e) => {
-                                            handleMenuItemClick(e, i);
-                                            setSelectedTab(1);
-                                            handleClose();
-                                        }}
-                                        selected={i === selectedMenuItem && selectedTab === 1}
-                                    >
-                                        {option.name}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Tabs>
+                        {matches ? null : tabs}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>

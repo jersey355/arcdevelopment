@@ -11,15 +11,15 @@ const App = () => {
       <BrowserRouter>
         <Header />
         <Switch>
-          <Route exact path="/" component={() => <dive>Home</dive>} />
-          <Route exact path="/services" component={() => <dive>Services</dive>} />
-          <Route exact path="/customsoftware" component={() => <dive>Custom Software</dive>} />
-          <Route exact path="/mobileapps" component={() => <dive>Mobile Apps</dive>} />
-          <Route exact path="/websites" component={() => <dive>Websites</dive>} />
-          <Route exact path="/revolution" component={() => <dive>The Revolution</dive>} />
-          <Route exact path="/about" component={() => <dive>About Us</dive>} />
-          <Route exact path="/contact" component={() => <dive>Contact Us</dive>} />
-          <Route exact path="/estimate" component={() => <dive>Free Estimate</dive>} />
+          <Route exact path="/" component={() => <div>Home</div>} />
+          <Route exact path="/services" component={() => <div>Services</div>} />
+          <Route exact path="/customsoftware" component={() => <div>Custom Software</div>} />
+          <Route exact path="/mobileapps" component={() => <div>Mobile Apps</div>} />
+          <Route exact path="/websites" component={() => <div>Websites</div>} />
+          <Route exact path="/revolution" component={() => <div>The Revolution</div>} />
+          <Route exact path="/about" component={() => <div>About Us</div>} />
+          <Route exact path="/contact" component={() => <div>Contact Us</div>} />
+          <Route exact path="/estimate" component={() => <div>Free Estimate</div>} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
